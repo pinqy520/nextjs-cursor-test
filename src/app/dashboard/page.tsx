@@ -1,16 +1,6 @@
-import { LogoutButton } from "@/components/logout-button"
 import { StatCard } from "@/components/dashboard/stat-card"
-import { DollarSign, Users, CreditCard, Activity, LayoutDashboard, Users2, ShoppingCart, Settings } from "lucide-react"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { DollarSign, Users, CreditCard, Activity } from "lucide-react"
 
-const navigation = [
-  { name: "概览", href: "/dashboard", icon: LayoutDashboard },
-  { name: "客户", href: "/dashboard/customers", icon: Users2 },
-  { name: "产品", href: "/dashboard/products", icon: ShoppingCart },
-  { name: "设置", href: "/dashboard/settings", icon: Settings },
-]
 
 export default function DashboardPage() {
   return (
