@@ -15,3 +15,31 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// 添加 Product 模型
+model Product {
+  id            String      @id // 用户自定义的产品ID
+  name          String      // 产品名称
+  description   String?     // 产品描述
+  type          String      // 产品类型
+  status        String      @default("draft") // 产品状态
+  imageUrl      String?     // 产品图片URL
+  tags          String      // 产品标签，用逗号分隔存储
+  
+  // 接入信息
+  webhookUrl    String      // Webhook URL
+  secretKey     String      // 回调验证密钥
+  apiVersion    String?     // API版本
+  notifyConfig  String?     // 通知配置，存储 JSON 字符串
+  retryStrategy String?     // 重试策略，存储 JSON 字符串
+  
+  // 法务信息
+  licenseUrl    String?     // 营业执照文件URL
+  qualificationUrls String  // 资质证明文件URLs，用逗号分隔存储
+  
+  // 元数据
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  createdBy     String      // 创建者ID
+  updatedBy     String      // 更新者ID
+}
