@@ -1,36 +1,205 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NextJS Cursor Simple
+
+This is a [Next.js](https://nextjs.org) project using Next.js 14, TypeScript, and Tailwind CSS, featuring a modern dashboard with authentication and product management.
+
+## Tech Stack
+
+- **Framework:** Next.js 14
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS, Shadcn UI
+- **Database:** SQLite
+- **ORM:** Prisma
+- **Authentication:** Custom JWT-based auth
+- **Form Validation:** Zod
+- **Package Manager:** npm
+
+## Features
+
+- 🔐 Authentication with email and password
+- 📊 Modern dashboard interface
+- 🎨 Fully responsive design
+- 🔍 Search functionality
+- 📱 Mobile-friendly navigation
+- 🎯 Role-based access control
+- 💾 SQLite database integration
+- 📦 Product Management System
+  - Multi-step form for product creation
+  - File upload support
+  - Status management
+  - Advanced search and filtering
+  - Pagination
+  - Responsive data tables
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── api/
+│   │   ├── auth/
+│   │   │   ├── login/
+│   │   │   └── register/
+│   │   └── products/
+│   │       ├── [id]/
+│   │       │   ├── route.ts
+│   │       │   └── status/
+│   │       └── route.ts
+│   ├── products/
+│   │   ├── [id]/
+│   │   │   ├── edit/
+│   │   │   └── page.tsx
+│   │   ├── new/
+│   │   └── page.tsx
+│   ├── dashboard/
+│   ├── login/
+│   └── register/
+├── components/
+│   ├── auth/
+│   │   ├── LoginForm.tsx
+│   │   └── RegisterForm.tsx
+│   ├── products/
+│   │   ├── ProductForm/
+│   │   │   ├── AccessInfo.tsx
+│   │   │   ├── BasicInfo.tsx
+│   │   │   ├── FormNavigation.tsx
+│   │   │   ├── LegalInfo.tsx
+│   │   │   └── ProductForm.tsx
+│   │   └── ProductList/
+│   │       ├── Pagination.tsx
+│   │       ├── ProductTable.tsx
+│   │       └── SearchFilters.tsx
+│   ├── navigation/
+│   │   └── NavBar.tsx
+│   └── ui/
+└── lib/
+    ├── productUtils.ts
+    └── validations/
+        └── product.ts
+```
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository
+2. Install dependencies:
+```bash
+npm install
+```
 
+3. Set up the database:
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+4. Seed the database with sample data:
+```bash
+npm run seed
+```
+
+5. Run the development server:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Product Management Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Multi-step Form
+- Step 1: Basic Information
+  - Product name, type, description
+  - Optional image upload
+  - Tags and status
+- Step 2: Access Information
+  - Product ID (unique identifier)
+  - Webhook URL configuration
+  - API version settings
+- Step 3: Legal Documents
+  - Business license upload
+  - Qualification certificate
+  - Supplemental documents
 
-## Learn More
+### List Management
+- Responsive data table
+- Status updates
+- Search and filtering
+- Pagination controls
+- Quick actions (view, edit)
 
-To learn more about Next.js, take a look at the following resources:
+### File Handling
+- Support for PDF documents
+- Image upload support
+- File size validation
+- Type validation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The project uses:
+- [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) with [Geist](https://vercel.com/font) font
+- Tailwind CSS for styling
+- TypeScript for type safety
+- Prisma for database management
+- Shadcn UI for components
+- Zod for form validation
 
-## Deploy on Vercel
+## Database Schema
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The database includes the following models:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```prisma
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  productId     String   @unique
+  name          String
+  type          String
+  description   String
+  imageUrl      String?
+  tags          String
+  status        String   @default("DRAFT")
+  webhookUrl    String
+  callbackKey   String
+  apiVersion    String?
+  businessLicense    String
+  qualificationCert  String
+  supplementalDocs   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([productId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+}
+```
+
+## API Routes
+
+### Authentication
+- `/api/auth/login` - Handle user login
+- `/api/auth/register` - Handle user registration
+
+### Product Management
+- `/api/products` - Create and list products
+- `/api/products/:id` - Get, update, and delete products
+- `/api/products/:id/status` - Update product status
+
+## Future Enhancements
+
+1. Cloud storage integration for file uploads
+2. Batch operations for products
+3. Product version control
+4. Advanced search with Elasticsearch
+5. Product analytics and metrics
+6. Real-time status updates
+7. Product category management
+8. Product approval workflow
+

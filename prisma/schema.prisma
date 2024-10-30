@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id            String      @id @default(cuid())
+  productId     String      @unique
+  name          String      
+  type          String      
+  description   String      
+  imageUrl      String?
+  tags          String      
+  status        String      @default("DRAFT")
+  webhookUrl    String
+  callbackKey   String
+  apiVersion    String?
+  
+  businessLicense    String
+  qualificationCert  String
+  supplementalDocs   String    
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([productId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+} 
